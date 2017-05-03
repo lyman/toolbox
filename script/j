@@ -1,0 +1,49 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $config = "$ENV{'HOME'}/.config/j_config.pl";
+sub print_usage {
+    my $reason = shift @_;
+    print "$reason\nplace something as follows in $config\n";
+    print <<EOF
+\%machines = (
+    'name' => ['ssh foo\@1.2.3.4', 'comments here'],
+    'name2' => ['ssh bar\@4.3.2.1']
+    );
+1;
+EOF
+;
+    exit 1;
+}
+
+our %machines;
+print_usage("config file not found.") unless (-e $config);
+require $config;
+print_usage("no machines defined in config file.") unless (%machines);
+
+my $choice = shift @ARGV;
+unless (defined($choice)) {
+    my @idx = sort keys %machines;
+    for (0 .. $#idx) {
+        print "$_ - $idx[$_]\n";
+    }
+    print "\nchoose machine to login (id or name): ";
+    $choice = <STDIN>;
+    chomp($choice);
+    if ($choice =~ m/^\d+$/ and $choice >=0 and $choice <= $#idx) {
+        $choice = $idx[$choice];
+    }
+};
+
+if (exists($machines{$choice})) {
+    (my $ssh, my $hint) = @{ $machines{$choice} };
+    print "\nlog on $choice:\n";
+    print ">>>\n$hint\n<<<\n" if (defined($hint));
+    exec $ssh;
+    exit 0;
+}
+
+print "unknown machine: $choice\n";
+exit 1;

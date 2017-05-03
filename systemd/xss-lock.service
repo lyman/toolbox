@@ -1,0 +1,9 @@
+[Unit]
+Description=Hook to umount network file systems (gvfs smb for example) when sleep
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/xss-lock -l /home/lyman/workspace/script/umount_all
+
+[Install]
+WantedBy=default.target

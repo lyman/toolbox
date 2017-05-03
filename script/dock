@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+subcmd=$1
+
+if [ -z "$subcmd" ]; then
+    echo "usage: $0 tags|clean"
+    echo "   or: $0 docker commands ..."
+    exit 0
+fi
+
+if [ "$subcmd" == "tags" ]; then
+   curl -s -S "https://registry.hub.docker.com/v2/repositories/library/$@/tags/" | jq '."results"[]["name"]' | sort
+elif [ "$subcmd" == "clean" ]; then
+    docker rm $(docker ps -a -q)
+else
+    docker $@;
+fi

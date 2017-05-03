@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+luit -encoding GBK telnet bbs.newsmth.net

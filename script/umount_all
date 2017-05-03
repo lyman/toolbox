@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [ -z "$XSS_SLEEP_LOCK_FD" ]; then
+    exit 0
+fi
+
+# gvfs samba mount
+echo "clearing gvfs samba ..."
+/usr/bin/gio mount -s smb
+
+# alimount sshfs
+for p in `/usr/bin/mount -l | grep fuse | cut -f 3 -d ' '`; do
+    echo "umount $p ..."
+    /usr/bin/fusermount -u -z $p
+    /usr/bin/rmdir $p
+done

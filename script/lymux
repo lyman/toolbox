@@ -1,0 +1,26 @@
+#!/bin/sh
+# lyman customized tmux startup script
+# modified from https://github.com/xuxiaodong/tmuxen/blob/master/tmuxen
+# license: GPL
+# Last modified: lyman 2017-02-22 00:35:17 cst
+
+cmd=$(which tmux)   # tmux path
+session=lymux       # session name
+default="/bin/bash" # default shell
+
+if [ -z $cmd ]; then
+    echo "You need to install tmux."
+    exit 1
+fi
+
+$cmd has -t $session
+if [ $? != 0 ]; then
+    $cmd new -d -s $session
+    $cmd neww -t $session -n "log" "journalctl -f"
+    $cmd splitw -v -p 30 -t $session "$HOME/opt/cow/cow"
+    $cmd selectw -t $session:2
+fi
+
+$cmd att -t $session
+
+exit 0

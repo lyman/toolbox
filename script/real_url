@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ $1 ]; then
+    proxychains curl -sI "$1" 2>&1 | sed -n "/^Location: .*/{s/^Location: //; p}"
+fi

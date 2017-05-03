@@ -1,0 +1,43 @@
+#!/usr/bin/env perl
+
+use strict;
+
+sub print_usage {
+    print "usage: $0 [-r 90|-90] file ...\n";
+    print "  -r 90|-90   rotate video 90/-90 degrees clockwise\n";
+    print "  -h          print this usage\n";
+}
+
+my @files;
+my $angle;
+while (my $p = shift @ARGV) {
+    if ($p =~ m/-r/) {
+        $angle = shift @ARGV;
+        if ($angle == 90) {
+            $angle = '-vf "transpose=1"';
+        } elsif ($angle == -90) {
+            $angle = '-vf "transpose=2"';
+        } else {
+            print STDERR "unknown angle: $angle\n";
+            exit 1;
+        }
+    } elsif ($p =~ m/-h/) {
+        print_usage();
+        exit 0;
+    } else {
+        push @files, $p;
+    }
+}
+unless (@files) {
+    print STDERR "no video file specified\n";
+    print_usage();
+}
+
+foreach (@files) {
+    m/^(.*)\..*$/;
+    my $cmd = "ffmpeg $angle -i $_ -vcodec libx264" .
+        # " -vpre libx264-lossless_fast" .
+        " -acodec flac $1.mkv";
+    # print "[DEBUG] $cmd\n";
+    0 == system($cmd) or die "failed to convert $_\n";
+}
