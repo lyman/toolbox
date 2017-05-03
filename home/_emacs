@@ -1,0 +1,424 @@
+;; Last modified: lyman 2017-05-03 15:14:07 cst
+
+;; ==== 个人信息  ====
+
+;; 名字
+(setq user-full-name "lyman")
+;; 邮件地址
+(setq user-mail-address "lymanrb@gmail.com")
+
+;; ==== package ====
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  )
+
+;; (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+;;                          ("marmalade" . "https://marmalade-repo.org/packages/")
+;;                          ("melpa" . "http://melpa.org/packages/")))
+
+;; sr-speed-bar
+(global-set-key (kbd "C-c m") 'sr-speedbar-toggle)
+
+;; ==== helm mode ====
+(require 'helm)
+(require 'helm-config)
+
+;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+;; (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(when (executable-find "curl")
+  (setq helm-google-suggest-use-curl-p t))
+
+(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+      helm-ff-file-name-history-use-recentf t)
+
+(helm-mode 1)
+
+(require 'helm-smex)
+(global-set-key [remap execute-extended-command] #'helm-smex)
+(global-set-key (kbd "M-X") #'helm-smex-major-mode-commands)
+
+;; ==== 代码风格 ====
+
+;; 设置imenu的排序方式为按名称排序
+;; (setq imenu-sort-function 'imenu--sort-by-name)
+
+;; 删除结尾空格
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; 代码折叠
+(add-hook 'hs-minor-mode-hook
+          (lambda ()
+            (define-key hs-minor-mode-map (kbd "<f5>") 'hs-hide-block)
+            (define-key hs-minor-mode-map (kbd "<f6>") 'hs-show-block)
+            (define-key hs-minor-mode-map (kbd "<f7>") 'hs-hide-all)
+            (define-key hs-minor-mode-map (kbd "<f8>") 'hs-show-all)
+            )
+          )
+
+;; C/C++
+
+;; open corresponding header file
+(global-set-key (kbd "C-x C-o") 'ff-find-other-file)
+
+;; projectile
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+
+;; company for completion
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+
+;; google c style
+(add-to-list 'load-path "~/.emacs.d/elpa/google-c-style-20130412.1415")
+(require 'google-c-style)
+;; (add-hook 'c-mode-common-hook 'google-set-c-style)
+
+(add-hook 'c-mode-hook 'lyman-c-mode)
+(add-hook 'c++-mode-hook 'lyman-c-mode)
+
+(defun lyman-c-mode()
+  ;; 将回车代替C-j的功能，换行的同时对齐
+  ;; (define-key c-mode-map [return] 'newline-and-indent)
+  (interactive)
+  ;; 设置C程序的对齐风格
+  (c-set-style "K&R")
+  ;; 自动模式，在此种模式下当你键入{时，会自动根据你设置的对齐风格对齐
+  (c-toggle-auto-state)
+  ;; 此模式下，当按Backspace时会删除最多的空格
+  (c-toggle-hungry-state)
+  ;; TAB键的宽度
+  (setq c-basic-offset 4)
+  ;; 在菜单中加入当前Buffer的函数索引
+  ;; (imenu-add-menubar-index)
+  ;; 在状态条上显示当前光标在哪个函数体内部
+  (which-function-mode)
+  ;; 代码折叠
+  (hs-minor-mode t)
+  ;; doxygen
+  ;; (doc-mode t)
+  ;; 令 switch 中的 case 带缩进
+  (c-set-offset 'case-label '+)
+  )
+
+;; ;; ggtags
+;; (add-hook 'c-mode-common-hook
+;;           (lambda ()
+;;             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+;;               (ggtags-mode 1))))
+
+;; (define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+;; (define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+;; (define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+;; (define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+;; (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+;; (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+;; (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+
+;; helm-gtags
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-auto-update t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+ helm-gtags-prefix-key "\C-cg"
+ helm-gtags-suggested-key-mapping t
+ )
+
+(require 'helm-gtags)
+;; Enable helm-gtags-mode
+(add-hook 'dired-mode-hook 'helm-gtags-mode)
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+
+;; ;; rtags
+;; (require 'rtags)
+;; (require 'company-rtags)
+
+;; (setq rtags-completions-enabled t)
+;; (eval-after-load 'company
+;;   '(add-to-list
+;;     'company-backends 'company-rtags))
+;; (setq rtags-autostart-diagnostics t)
+;; (rtags-enable-standard-keybindings)
+
+;;--------------------------------------------------------------------
+;; Lines enabling gnuplot-mode
+
+;; move the files gnuplot.el to someplace in your lisp load-path or
+;; use a line like
+(setq load-path (append (list "/usr/share/emacs/site-lisp") load-path))
+
+;; these lines enable the use of gnuplot mode
+(autoload 'gnuplot-mode "gnuplot" "gnuplot major mode" t)
+(autoload 'gnuplot-make-buffer "gnuplot" "open a buffer in gnuplot mode" t)
+
+;; this line automatically causes all files with the .gp extension to
+;; be loaded into gnuplot mode
+(setq auto-mode-alist (append '(("\\.gp$" . gnuplot-mode)) auto-mode-alist))
+
+;; This line binds the function-9 key so that it opens a buffer into
+;; gnuplot mode
+(global-set-key [(f9)] 'gnuplot-make-buffer)
+
+;; end of line for gnuplot-mode
+;;--------------------------------------------------------------------
+
+;; ==== 外观 ====
+
+;; ;;色彩主题
+(add-to-list 'load-path "~/.emacs.d/elpa/color-theme-20080305.34")
+(require 'color-theme)
+(color-theme-initialize)
+
+(if (display-graphic-p)
+    (progn
+    ;; if graphic
+      (color-theme-dark-blue2))
+    ;; else (optional)
+    (color-theme-tty-dark))
+
+;;禁用工具栏
+(tool-bar-mode -1)
+
+;;禁用菜单栏
+(menu-bar-mode -1)
+
+;;禁用滚动栏，用鼠标滚轮代替
+;; (scroll-bar-mode 0)
+
+;;禁用启动画面
+(setq inhibit-startup-message t)
+
+;; ==== 键绑定 ====
+
+;; C-z 设置标记
+(global-set-key (kbd "C-z") 'set-mark-command)
+
+;; F10 显示/隐藏菜单栏
+(global-set-key (kbd "<f10>") 'menu-bar-mode)
+
+;; F9 打开菜单 ;; M-x menu-bar-open
+(global-set-key (kbd "<f9>") 'menu-bar-open)
+
+;; ==== 缓冲区 ====
+
+;;tab 宽度
+(setq-default tab-width 4)
+
+;;使用空格替代 tab 符
+(setq-default indent-tabs-mode nil)
+
+;;光标停留 \t 时显示为大方块
+(setq-default x-stretch-cursor nil)
+
+;;设定行距
+(setq default-line-spacing 0)
+
+;;页宽
+(setq default-fill-column 80)
+
+;;自动折行
+(setq auto-fill-mode t)
+
+;;缺省模式 text-mode
+(setq default-major-mode 'text-mode)
+
+;;设置删除纪录
+(setq kill-ring-max 500)
+
+;;以空行结束
+(setq require-final-newline t)
+
+;;语法加亮
+(global-font-lock-mode t)
+
+;;只渲染当前屏幕语法高亮，加快显示速度
+;; (setq lazy-lock-defer-on-scrolling t)
+;; (setq font-lock-support-mode 'lazy-lock-mode)
+;; (setq font-lock-maximum-decoration t)
+
+;;高亮显示区域选择
+(transient-mark-mode t)
+
+;;页面平滑滚动，靠近屏幕边沿3行时开始滚动
+(setq scroll-margin 3
+      scroll-conservatively 10000)
+
+;;高亮显示成对括号，但不来回弹跳
+(show-paren-mode t)
+(setq show-paren-style 'parentheses)
+
+;;鼠标指针规避光标
+;;(mouse-avoidance-mode 'animate)
+
+;;粘贴于光标处，而不是鼠标指针处
+(setq mouse-yank-at-point t)
+
+;; ==== 回显区 ====
+
+;;闪屏报警
+;; (setq visible-bell t)
+
+;;使用 y or n 提问
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;;锁定行高
+(setq resize-mini-windows nil)
+
+;;递归minibuffer
+(setq enable-recursive-minibuffers t)
+
+;;将错误信息显示在回显区
+;;(condition-case err
+;;    (progn
+;;      (require 'xxx) )
+;;  (error
+;;   (message "Can't load xxx-mode %s" (cdr err))))
+
+;; ==== 状态栏 ====
+
+;;显示时间
+;; (display-time)
+;; (setq display-time-24hr-format t)
+;; (setq display-time-interval 10)
+
+;; ;;显示日期
+;; (setq display-time-day-and-date t)
+
+;;显示列号
+(setq column-number-mode t)
+
+;;标题栏显示 %f 缓冲区完整路径 %p 页面百分数 %l 行号
+(setq frame-title-format "%f")
+
+;; ==== 杂项  ====
+
+;;关闭自动备份
+;; (setq make-backup-files nil)
+
+;;备份设置
+(setq backup-directory-alist
+      `((".*" . ,"~/.saves")))
+(setq auto-save-file-name-transforms
+      `((".*" ,"~/.saves" t)))
+;; (setq
+;;  ;; 自动备份
+;;  backup-by-copying t
+;;  ;; 自动备份目录
+;;  backup-directory-alist '((".*" . "~/.saves"))
+;;  ;; 自动删除旧的备份文件
+;;  delete-old-versions t
+;;  ;; 保留最近的备份文件
+;;  kept-new-versions 5
+;;  ;; 保留最早的备份文件
+;;  kept-old-versions 2
+;;  ;; 多次备份
+;;  version-control t
+;;  )
+
+;;时间戳
+(add-hook 'write-file-hooks 'time-stamp)
+(setq time-stamp-active t)
+(setq time-stamp-start "Last modified:")
+(setq time-stamp-format " %:u %:y-%02m-%02d %02H:%02M:%02S %z")
+(setq time-stamp-end "\n")
+;; (setq time-stamp-warn-inactive t)
+
+;;当前时间
+(defun lyman-insert-time()
+  (interactive)
+  (insert (format-time-string "%Y-%02m-%02d %02H:%02M:%02S %z"(current-time)))
+  )
+(global-set-key (kbd "C-c t") 'lyman-insert-time)
+
+;;当前字符
+(global-set-key (kbd "C-c w") 'what-cursor-position)
+
+;; highlight tail
+(add-to-list 'load-path "~/.emacs.d/elpa/highlight-tail-20140416.141")
+(require 'highlight-tail)
+
+(setq highlight-tail-colors '(("#233b5a" . 0)
+                              ("#73a9ee" . 25)
+                              ("#233b5a" . 66)))
+(highlight-tail-mode t)
+
+;; regex tool
+(add-to-list 'load-path "~/.emacs.d/elpa/regex-tool-20131104.1434")
+(load "regex-tool" t)
+
+;; ;; auto complete
+;; (add-to-list 'load-path "~/.emacs.d/elpa/auto-complete-20140414.2324")
+;; (require 'auto-complete-config)
+;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/elpa/auto-complete-20140414.2324/dict")
+;; (ac-config-default)
+
+;; undo-tree
+(add-to-list 'load-path "~/.emacs.d/elpa/undo-tree-0.6.5")
+(require 'undo-tree)
+(global-undo-tree-mode)
+
+;; markdown mode
+(add-to-list 'load-path "~/.emacs.d/elpa/markdown-mode-20131210.700")
+(autoload 'markdown-mode "markdown-mode.el"
+    "Major mode for editing Markdown files" t)
+(setq auto-mode-alist
+    (cons '("\\.md" . markdown-mode) auto-mode-alist))
+
+;; org-mode, personal agenda
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;; ==== evil(vim) mode ====
+;; already installed through elpa from http://marmalade-repo.org/
+;; (add-to-list 'load-path "~/.emacs.d/elpa/evil-1.0.0")
+;; (require 'evil)
+
+;; smartparens
+(require 'smartparens-config)
+
+;; ;; smex
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; ;; This is your old M-x.
+;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+;; clipboard
+(setq x-select-enable-primary t)
+(setq x-select-enable-clipboard t)
+
+;; path
+(exec-path-from-shell-initialize)
+
+;; ;; chromium
+;; (require 'edit-server)
+;; (edit-server-start)

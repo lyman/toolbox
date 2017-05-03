@@ -1,0 +1,188 @@
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+# don't put duplicate lines in the history. See bash(1) for more options
+export HISTCONTROL=ignoredups
+# ... and ignore same sucessive entries.
+export HISTCONTROL=ignoreboth
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+xterm-color|screen)
+    PS1='\[\033[01;32m\]\u\[\033[00m\]@\[\033[01;36m\]\h\[\033[00m\]@\A:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    ;;
+*)
+    PS1='\u@\h@\A:\w\$ '
+    ;;
+esac
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*|screen)
+    PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"'
+    ;;
+*)
+    ;;
+esac
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+#if [ -f ~/.bash_aliases ]; then
+#    . ~/.bash_aliases
+#fi
+
+# enable color support of ls and also add handy aliases
+if [ "$TERM" != "dumb" ]; then
+    eval "`dircolors -b`"
+    alias ls='ls --color=auto'
+    #alias dir='ls --color=auto --format=vertical'
+    #alias vdir='ls --color=auto --format=long'
+fi
+
+# some more aliases
+alias ll='ls -l -h'
+#alias la='ls -A'
+#alias l='ls -CF'
+alias e='emacsclient -n'
+# top 20 frequent command
+alias fav='history | awk "{CMD[\$2]++;count++;} END { for(a in CMD) print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}" | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n20'
+# open current folder in nautilus
+alias n='nautilus -n . & 2>/dev/null 1>/dev/null'
+# make current dir a http server @ 8080 port
+alias web='twistd -n web --path .'
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+fi
+
+# lyman's preference
+# export LANG="zh_CN.UTF-8"
+export EDITOR="emacsclient -n"
+
+# set PATH so it includes user's private bin if it exists
+if [ -d ~/bin ] ; then
+    PATH=~/bin:"${PATH}"
+fi
+
+# for ruby gem
+if which ruby >/dev/null && which gem >/dev/null; then
+    PATH="$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin"
+fi
+
+# for compiling chromium
+# PATH=$PATH:~/workspace/chromium/depot_tools
+
+# for CPAN
+PATH=$PATH:/home/lyman/perl5/bin
+
+# for android
+# PATH=$PATH:/home/lyman/opt/android-sdk/platform-tools:/home/lyman/opt/android-sdk/tools
+
+# for maven
+export ANDROID_HOME=/home/lyman/opt/android-sdk
+# PATH=$PATH:/home/lyman/opt/apache-maven-3.0.5/bin
+
+# for java
+alias JDK8='JAVA_HOME=/usr/lib/jvm/java-8-openjdk'
+alias JDK6='JAVA_HOME=$HOME/opt/jdk1.6.0_45'
+alias JDK7='JAVA_HOME=$HOME/opt/jdk1.7.0_60'
+# better gui for java apps
+# export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
+# for visualvm remote profiling
+jmx() {
+    if [[ -n "$1" && -n "$2" ]]; then
+        _JAVA_OPTIONS="$_JAVA_OPTIONS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=$1" "${@:2}"
+    else
+        echo "usage: jmx port command"
+    fi
+}
+
+# auto-completion
+bind "\C-n":menu-complete
+
+# Less Colors for Man Pages
+export LESS_TERMCAP_mb=$'\E[5;34m'       # begin blinking
+export LESS_TERMCAP_md=$'\E[1;34m'       # begin bold
+export LESS_TERMCAP_me=$'\E[0m'          # end mode
+export LESS_TERMCAP_se=$'\E[0m'          # end standout-mode
+export LESS_TERMCAP_so=$'\E[1;37;44m'    # begin standout-mode - info box
+export LESS_TERMCAP_ue=$'\E[0m'          # end underline
+export LESS_TERMCAP_us=$'\E[4m'          # begin underline
+
+# for perldoc
+export PERLDOC_PAGER=less
+export PERL_LOCAL_LIB_ROOT="/home/lyman/perl5";
+export PERL_MB_OPT="--install_base /home/lyman/perl5";
+export PERL_MM_OPT="INSTALL_BASE=/home/lyman/perl5";
+export PERL5LIB="/home/lyman/perl5/lib/perl5/x86_64-linux-thread-multi:/home/lyman/perl5/lib/perl5";
+
+# for mpd
+export MPD_HOST=localhost
+export MPD_PORT=6600
+
+# for python
+## switch to system python2 env
+alias py2="source $HOME/.virtualenvs/python2/bin/activate"
+
+# export PYENV_ROOT="${HOME}/.pyenv"
+# if [ -d "${PYENV_ROOT}" ]; then
+#   export PATH="${PYENV_ROOT}/bin:${PATH}"
+#   eval "$(pyenv init -)"
+# fi
+# export PYTHONPATH=.:$PYTHONPATH
+
+# for go lang
+export GOPATH=~/.go
+PATH=$PATH:~/.go/bin
+
+# for nodejs
+export npm_config_prefix=$HOME/.node_modules
+PATH=$PATH:$npm_config_prefix/bin
+alias cnpm="npm --registry=https://registry.npm.taobao.org \
+--cache=$HOME/.npm/.cache/cnpm \
+--disturl=https://npm.taobao.org/dist \
+--userconfig=$HOME/.cnpmrc"
+
+# The next line updates PATH for the Google Cloud SDK.
+# source '/home/lyman/workspace/google-cloud-sdk/path.bash.inc'
+
+# The next line enables bash completion for gcloud.
+# source '/home/lyman/workspace/google-cloud-sdk/completion.bash.inc'
+
+# added by travis gem
+[ -f /home/lyman/.travis/travis.sh ] && source /home/lyman/.travis/travis.sh
+
+# hadoop/hive
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
+export HADOOP_HOME=$HOME/opt/hadoop-2.7.2
+export HIVE_HOME=$HOME/opt/apache-hive-2.1.0-bin
+export HIVE_LIB=$HIVE_HOME/lib
+PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$HIVE_HOME/bin
+
+# for install rJava
+# LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/amd64:$JAVA_HOME/jre/lib/amd64/server
+
+# steam
+export STEAM_RUNTIME=0
+
+source $HOME/workspace/ali/scripts/alibashrc
+source $HOME/workspace/toolbox/home/private_bashrc
+
+export PATH

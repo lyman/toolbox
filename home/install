@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Cwd qw(abs_path);
+use File::Copy;
+
+print ">> old files will be stored in backup\n";
+mkdir "backup";
+
+my @installs;
+if ($#ARGV < 0) {
+    @installs = `/usr/bin/ls -1 -d _*`;
+} else {
+    @installs = @ARGV;
+}
+
+for (@installs) {
+    chomp;
+    my $src = $_;
+    s/^_/./;
+    my $dst = $ENV{"HOME"} . "/$_";
+    print "-- installing $dst ...\n";
+    move $dst, "backup/$src";
+    symlink abs_path($src), $dst;
+}
+print "<< done\n";

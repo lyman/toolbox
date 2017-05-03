@@ -1,0 +1,7 @@
+.mc-lists.el
+auto-save-list
+tramp
+session.*
+ac-comphist.dat
+projectile-bookmarks.eld
+private_*
