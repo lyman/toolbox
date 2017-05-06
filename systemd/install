@@ -25,5 +25,7 @@ for (@installs) {
     print "-- installing $dst ...\n";
     move $dst, "backup/$src";
     symlink abs_path($src), $dst;
+    system("systemctl --user enable $_");
 }
+system("systemctl --user daemon-reload");
 print "<< done\n";
