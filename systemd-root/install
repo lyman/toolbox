@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+ETC=/etc/systemd/system
+
+for f in $(ls -1 *.service); do
+    if [ -e $ETC/$f ]; then
+        echo backup $ETC/$f
+        mv -v $ETC/$f $ETC/$f.bak
+    fi
+    echo install $ETC/$f
+    cp -v $f $ETC/
+    systemctl enable $f
+done
+
+systemctl daemon-reload
