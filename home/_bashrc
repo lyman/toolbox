@@ -62,8 +62,8 @@ alias e='emacsclient -n'
 alias fav='history | awk "{CMD[\$2]++;count++;} END { for(a in CMD) print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}" | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n20'
 # open current folder in nautilus
 alias n='nautilus -n . & 2>/dev/null 1>/dev/null'
-# make current dir a http server @ 8080 port
-alias web='twistd -n web --path .'
+# make current dir a http server @ 8081 port
+alias web="twistd -n web -p 'tcp:port=8081' --path ."
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
