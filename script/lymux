@@ -4,9 +4,11 @@
 # license: GPL
 # Last modified: lyman 2017-02-22 00:35:17 cst
 
+# for termite
+source /etc/profile.d/vte.sh
+
 cmd=$(which tmux)   # tmux path
 session=lymux       # session name
-default="/bin/bash" # default shell
 
 if [ -z $cmd ]; then
     echo "You need to install tmux."
@@ -15,10 +17,10 @@ fi
 
 $cmd has -t $session
 if [ $? != 0 ]; then
-    $cmd new -d -s $session
+    $cmd new -d -s $session '/usr/bin/fish'
     $cmd neww -t $session -n "log" "journalctl -f"
     $cmd splitw -v -p 30 -t $session "$HOME/opt/cow/cow"
-    $cmd selectw -t $session:2
+    $cmd selectw -t $session:1
 fi
 
 $cmd att -t $session
