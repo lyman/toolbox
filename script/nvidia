@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+ACTION=$1
+
+if [ -z "$ACTION" ];
+then
+  echo "usage: $0 [on/off]"
+  echo -n "current status: "
+  cat /proc/acpi/bbswitch
+  exit 0
+fi
+
+if [[ $EUID -ne 0 ]]; then
+   echo "To turn on/off nvidia card, this script must be run as root"
+   exit 1
+fi
+
+if [ "$ACTION" == "on" ];
+then
+  tee /proc/acpi/bbswitch <<< ON
+elif [ "$ACTION" == "off" ];
+then
+  rmmod nvidia_uvm
+  rmmod nvidia
+  tee /proc/acpi/bbswitch <<< OFF
+fi
