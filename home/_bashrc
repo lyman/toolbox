@@ -79,13 +79,11 @@ export EDITOR="emacs -nw"
 
 # set PATH so it includes user's private bin if it exists
 if [ -d ~/bin ] ; then
-    PATH=~/bin:"${PATH}"
+    PATH=~/bin:~/.local/bin:"${PATH}"
 fi
 
 # for ruby gem
-if which ruby >/dev/null && which gem >/dev/null; then
-    PATH="$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin"
-fi
+PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
 
 # for CPAN
 PATH=$PATH:/home/lyman/perl5/bin
@@ -168,5 +166,3 @@ source $HOME/workspace/ali/scripts/alibashrc
 source $HOME/workspace/toolbox/home/private_bashrc
 
 export PATH
-
-# source ~/.xsh
