@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# for sync primay and clipboard
+autocutsel -fork &
+autocutsel -selection PRIMARY -fork &
