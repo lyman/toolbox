@@ -1,4 +1,4 @@
-;; Last modified: lyman 2018-04-25 12:13:18 cst
+;; Last modified: lyman 2018-11-05 17:49:31 cst
 
 ;; ==== 个人信息  ====
 
@@ -12,7 +12,8 @@
   (require 'package)
   (package-initialize)
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  )
+;;  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+)
 
 ;; (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 ;;                          ("marmalade" . "https://marmalade-repo.org/packages/")
@@ -31,8 +32,8 @@
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
 
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 ;; (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 (when (executable-find "curl")
@@ -188,18 +189,7 @@
 ;;--------------------------------------------------------------------
 
 ;; ==== 外观 ====
-
-;; ;;色彩主题
-(add-to-list 'load-path "~/.emacs.d/elpa/color-theme-20080305.34")
-(require 'color-theme)
-(color-theme-initialize)
-
-(if (display-graphic-p)
-    (progn
-    ;; if graphic
-      (color-theme-dark-blue2))
-    ;; else (optional)
-    (color-theme-tty-dark))
+(add-hook 'after-init-hook (lambda () (load-theme 'zenburn)))
 
 ;;禁用工具栏
 (tool-bar-mode -1)
@@ -396,7 +386,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "Noto Sans Mono CJK SC" :foundry "GOOG" :slant normal :weight normal :height 109 :width normal)))))
 
 ;; ==== evil(vim) mode ====
 ;; already installed through elpa from http://marmalade-repo.org/
@@ -424,11 +414,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(column-number-mode t)
  '(custom-enabled-themes (quote (color-theme-dark-blue2)))
+ '(custom-safe-themes
+   (quote
+    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "fc9ff61d51078365f4b1eb5a8f47b71700f967743b181c0ccae1401956e4b568" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "dd43ce1171324a8e47f9e4ca9f49773c4b4960706171ab951130c668adc59f53" "3f44e2d33b9deb2da947523e2169031d3707eec0426e78c7b8a646ef773a2077" default)))
  '(indent-tabs-mode nil)
  '(js-indent-level 2)
  '(package-selected-packages
    (quote
-    (magit-gerrit gerrit-download magit-gitflow visual-ascii-mode visual-regexp-steroids lua-mode xcscope web-mode web-beautify sr-speedbar smartparens rust-mode regex-tool php-mode neotree markdown-mode js2-mode highlight-tail helm-smex helm-projectile helm-gtags graphviz-dot-mode google-c-style go-mode ggtags exec-path-from-shell evil company color-theme auto-save-buffers-enhanced auto-complete ag)))
+    (protobuf-mode solarized-theme zenburn-theme nova-theme pcache request ensime magit-gerrit gerrit-download magit-gitflow visual-ascii-mode visual-regexp-steroids lua-mode xcscope web-mode web-beautify sr-speedbar smartparens rust-mode regex-tool php-mode neotree markdown-mode js2-mode highlight-tail helm-smex helm-projectile helm-gtags graphviz-dot-mode google-c-style go-mode ggtags exec-path-from-shell evil company auto-save-buffers-enhanced auto-complete ag)))
  '(sh-basic-offset 2)
- '(sh-indentation 2))
+ '(sh-indentation 2)
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
