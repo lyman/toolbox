@@ -62,9 +62,10 @@ alias e='emacsclient -n'
 alias fav='history | awk "{CMD[\$2]++;count++;} END { for(a in CMD) print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}" | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n20'
 # open current folder in nautilus
 alias n='nautilus -n . & 2>/dev/null 1>/dev/null'
-# make current dir a http server @ 8081 port
-alias web="twistd -n web -p 'tcp:port=8081' --path ."
-alias st="st -f 'Noto Sans Mono CJK SC Regular-12:style=Regular'"
+# current desktop vnc for vbox guest os
+alias vnc="x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
+alias gitmeld="git difftool --dir-diff"
+alias dmesg="dmesg -H"
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -90,11 +91,11 @@ PATH=$PATH:/home/lyman/perl5/bin
 
 # for android
 # PATH=$PATH:/home/lyman/opt/android-sdk/platform-tools:/home/lyman/opt/android-sdk/tools
-
-# for maven
 export ANDROID_HOME=/home/lyman/opt/android-sdk
 
 # for java
+export MAVEN_OPTS="-Xmx4G"
+export JAVA_HOME=/usr/lib/jvm/default
 # better gui for java apps
 # export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
 # for visualvm remote profiling
@@ -147,14 +148,17 @@ alias cnpm="npm --registry=https://registry.npm.taobao.org \
 [ -f /home/lyman/.travis/travis.sh ] && source /home/lyman/.travis/travis.sh
 
 # hadoop/hive
-# export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
-# export HADOOP_HOME=$HOME/opt/hadoop-2.7.2
+export HADOOP_HOME=$HOME/opt/hadoop
+PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+# volume2
+# export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$HADOOP_HOME/share/hadoop/odps/lib/*
+
 # export HIVE_HOME=$HOME/opt/apache-hive-2.1.0-bin
 # export HIVE_LIB=$HIVE_HOME/lib
-# PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$HIVE_HOME/bin
+# PATH=$PATH:$HIVE_HOME/bin
 
 # for install rJava
-# LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/amd64:$JAVA_HOME/jre/lib/amd64/server
+export LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/amd64:$JAVA_HOME/jre/lib/amd64/server
 
 # steam
 export STEAM_RUNTIME=0
@@ -164,5 +168,8 @@ source /etc/profile.d/vte.sh
 
 source $HOME/workspace/ali/scripts/alibashrc
 source $HOME/workspace/toolbox/home/private_bashrc
+
+# miniconda3
+PATH=$PATH:/home/lyman/opt/miniconda3/bin
 
 export PATH
