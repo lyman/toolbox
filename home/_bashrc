@@ -19,7 +19,7 @@ shopt -s checkwinsize
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-xterm-color|screen)
+xterm-color|xterm-256color|screen)
     PS1='\[\033[01;32m\]\u\[\033[00m\]@\[\033[01;36m\]\h\[\033[00m\]@\A:\[\033[01;34m\]\w\[\033[00m\]\$ '
     ;;
 *)
@@ -36,66 +36,64 @@ xterm*|rxvt*|screen)
     ;;
 esac
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-#if [ -f ~/.bash_aliases ]; then
-#    . ~/.bash_aliases
-#fi
+# check OS type
+case "$(uname -s)" in
+    Linux*)     OS_TYPE=Linux;;
+    Darwin*)    OS_TYPE=Mac;;
+    CYGWIN*)    OS_TYPE=Cygwin;;
+    MINGW*)     OS_TYPE=MinGw;;
+    *)          OS_TYPE="UNKNOWN:${unameOut}"
+esac
 
 # enable color support of ls and also add handy aliases
 if [ "$TERM" != "dumb" ]; then
-    eval "`dircolors -b`"
-    alias ls='ls --color=auto'
-    #alias dir='ls --color=auto --format=vertical'
-    #alias vdir='ls --color=auto --format=long'
+  if [ "$OS_TYPE" == "Linux" ]; then
+    # alias ls='ls --color'
+    alias ll='exa -l'
+  elif [ "$OS_TYPE" == "Mac" ]; then
+    alias ls='ls -G'
+  fi
 fi
-
-# some more aliases
 alias ll='ls -l -h'
-#alias la='ls -A'
-#alias l='ls -CF'
-alias e='emacsclient -n'
-# top 20 frequent command
-alias fav='history | awk "{CMD[\$2]++;count++;} END { for(a in CMD) print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}" | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n20'
-# open current folder in nautilus
-alias n='nautilus -n . & 2>/dev/null 1>/dev/null'
-# current desktop vnc for vbox guest os
-alias vnc="x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
-alias gitmeld="git difftool --dir-diff"
-alias dmesg="dmesg -H"
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-fi
+# sources
+SOURCES=("/etc/bash_completion"    # bash completion
+         "$HOME/.travis/travis.sh" # travis
+         "/etc/profile.d/vte.sh"   # termite
+         "$HOME/workspace/ali/scripts/alibashrc"       # ali machine alias
+         "$HOME/workspace/toolbox/home/private_bashrc" # private alias
+        )
+for f in "${SOURCES[@]}"
+do
+  [ -r "$f" ] && source $f
+done
 
-# lyman's preference
+# personal preference
 # export LANG="zh_CN.UTF-8"
-export EDITOR="emacs -nw"
+export EDITOR="emacs"
 
 # set PATH so it includes user's private bin if it exists
 if [ -d ~/bin ] ; then
-    PATH=~/bin:~/.local/bin:"${PATH}"
+  PATH=~/bin:~/.local/bin:"${PATH}"
 fi
 
 # for ruby gem
-PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
-
-# for CPAN
-PATH=$PATH:/home/lyman/perl5/bin
-
-# for android
-# PATH=$PATH:/home/lyman/opt/android-sdk/platform-tools:/home/lyman/opt/android-sdk/tools
-export ANDROID_HOME=/home/lyman/opt/android-sdk
+command -v ruby >/dev/null 2>&1 && PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
 
 # for java
-export MAVEN_OPTS="-Xmx4G"
-export JAVA_HOME=/usr/lib/jvm/default
+export MAVEN_OPTS="-Xmx2G"
+
+if [ "$OS_TYPE" == "Linux" ]; then
+  export JAVA_HOME=/usr/lib/jvm/default
+  # for rJava
+  export LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/amd64:$JAVA_HOME/jre/lib/amd64/server
+elif [ "$OS_TYPE" == "Mac" ]; then
+  export PATH="$HOME/.jenv/bin:$PATH"
+  eval "$(jenv init -)"
+  # for rJava
+  export LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/server
+fi
+
 # better gui for java apps
 # export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
 # for visualvm remote profiling
@@ -122,10 +120,6 @@ export LESS_TERMCAP_us=$'\E[4m'          # begin underline
 # for perldoc
 export PERLDOC_PAGER=less
 
-# for mpd
-export MPD_HOST=localhost
-export MPD_PORT=6600
-
 # for go lang
 export GOPATH=~/.go
 PATH=$PATH:~/.go/bin
@@ -138,38 +132,34 @@ alias cnpm="npm --registry=https://registry.npm.taobao.org \
 --disturl=https://npm.taobao.org/dist \
 --userconfig=$HOME/.cnpmrc"
 
-# The next line updates PATH for the Google Cloud SDK.
-# source '/home/lyman/workspace/google-cloud-sdk/path.bash.inc'
-
-# The next line enables bash completion for gcloud.
-# source '/home/lyman/workspace/google-cloud-sdk/completion.bash.inc'
-
-# added by travis gem
-[ -f /home/lyman/.travis/travis.sh ] && source /home/lyman/.travis/travis.sh
-
-# hadoop/hive
-export HADOOP_HOME=$HOME/opt/hadoop
-PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
-# volume2
-# export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$HADOOP_HOME/share/hadoop/odps/lib/*
-
+# hadoop
+# export HADOOP_HOME=$HOME/opt/hadoop
+# PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+# hive
 # export HIVE_HOME=$HOME/opt/apache-hive-2.1.0-bin
 # export HIVE_LIB=$HIVE_HOME/lib
 # PATH=$PATH:$HIVE_HOME/bin
+# volume2
+# export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$HADOOP_HOME/share/hadoop/odps/lib/*
 
-# for install rJava
-export LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/amd64:$JAVA_HOME/jre/lib/amd64/server
+# linux specific scripts
+if [ "$OS_TYPE" == "Linux" ]; then
+  # alias
+  alias e='emacsclient -n'
+  # top 20 frequent command
+  alias fav='history | awk "{CMD[\$2]++;count++;} END { for(a in CMD) print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}" | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n20'
+  # open current folder in nautilus
+  alias n='nautilus -n . & 2>/dev/null 1>/dev/null'
+  # current desktop vnc for vbox guest os
+  alias vnc="x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
+  alias gitmeld="git difftool --dir-diff"
+  alias dmesg="dmesg -H"
 
-# steam
-export STEAM_RUNTIME=0
+  # miniconda3
+  PATH=$PATH:/home/lyman/opt/miniconda3/bin
 
-# termite
-source /etc/profile.d/vte.sh
-
-source $HOME/workspace/ali/scripts/alibashrc
-source $HOME/workspace/toolbox/home/private_bashrc
-
-# miniconda3
-PATH=$PATH:/home/lyman/opt/miniconda3/bin
+  # steam
+  export STEAM_RUNTIME=0
+fi
 
 export PATH
