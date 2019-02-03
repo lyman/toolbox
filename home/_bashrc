@@ -69,7 +69,7 @@ do
 done
 
 # personal preference
-# export LANG="zh_CN.UTF-8"
+export LANG="zh_CN.UTF-8"
 export EDITOR="emacs"
 
 # set PATH so it includes user's private bin if it exists
