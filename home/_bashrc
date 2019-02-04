@@ -154,6 +154,7 @@ if [ "$OS_TYPE" == "Linux" ]; then
   alias vnc="x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
   alias gitmeld="git difftool --dir-diff"
   alias dmesg="dmesg -H"
+  alias b85="synergyc -f -n cruiser --enable-drag-drop --debug INFO $B85"
 
   # miniconda3
   PATH=$PATH:/home/lyman/opt/miniconda3/bin
