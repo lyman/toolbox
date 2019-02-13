@@ -165,7 +165,7 @@ if [ "$OS_TYPE" == "Linux" ]; then
 elif [ "$OS_TYPE" == "Mac" ]; then
   SYNC="/Applications/Synergy.app/Contents/MacOS/synergyc -f -n escort --debug INFO"
   alias b85="$SYNC --enable-drag-drop $B85"
-  alias ali="$SYNC --enable-drag-drop $DEV"
+  alias ali="$SYNC --enable-drag-drop $ALI"
 fi
 
 export PATH
