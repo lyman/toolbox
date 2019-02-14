@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if [ "$1" == "dict" ]; then
+  w=`xclip -o`
+  w=`printf "%q" "$w"`
+  goldendict "$w"
+elif [ "$1" == "screenshot" ]; then
+  flameshot gui
+else
+  echo -e "usage: $0 dict|screenshot"
+  exit 1;
+fi
