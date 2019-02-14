@@ -1,4 +1,4 @@
-;; Last modified: lyman 2018-11-05 17:49:31 cst
+;; Last modified: lyman 2019-02-13 20:55:11 cst
 
 ;; ==== 个人信息  ====
 
@@ -189,7 +189,7 @@
 ;;--------------------------------------------------------------------
 
 ;; ==== 外观 ====
-(add-hook 'after-init-hook (lambda () (load-theme 'zenburn)))
+;; (add-hook 'after-init-hook (lambda () (load-theme 'zenburn)))
 
 ;;禁用工具栏
 (tool-bar-mode -1)
@@ -386,7 +386,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Noto Sans Mono CJK SC" :foundry "GOOG" :slant normal :weight normal :height 109 :width normal)))))
+ '(default ((t (:family "Source Code Pro" :foundry "ADBO" :slant normal :weight normal :height 120 :width normal)))))
 
 ;; ==== evil(vim) mode ====
 ;; already installed through elpa from http://marmalade-repo.org/
@@ -414,17 +414,63 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
  '(column-number-mode t)
- '(custom-enabled-themes (quote (color-theme-dark-blue2)))
+ '(compilation-message-face (quote default))
+ '(cua-global-mark-cursor-color "#2aa198")
+ '(cua-normal-cursor-color "#657b83")
+ '(cua-overwrite-cursor-color "#b58900")
+ '(cua-read-only-cursor-color "#859900")
+ '(custom-enabled-themes (quote (zenburn)))
  '(custom-safe-themes
    (quote
-    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "fc9ff61d51078365f4b1eb5a8f47b71700f967743b181c0ccae1401956e4b568" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "dd43ce1171324a8e47f9e4ca9f49773c4b4960706171ab951130c668adc59f53" "3f44e2d33b9deb2da947523e2169031d3707eec0426e78c7b8a646ef773a2077" default)))
+    ("a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "fc9ff61d51078365f4b1eb5a8f47b71700f967743b181c0ccae1401956e4b568" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "dd43ce1171324a8e47f9e4ca9f49773c4b4960706171ab951130c668adc59f53" "3f44e2d33b9deb2da947523e2169031d3707eec0426e78c7b8a646ef773a2077" default)))
+ '(frame-background-mode (quote dark))
+ '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
+ '(highlight-symbol-colors
+   (--map
+    (solarized-color-blend it "#fdf6e3" 0.25)
+    (quote
+     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
+ '(highlight-symbol-foreground-color "#586e75")
+ '(highlight-tail-colors
+   (quote
+    (("#eee8d5" . 0)
+     ("#B4C342" . 20)
+     ("#69CABF" . 30)
+     ("#69B7F0" . 50)
+     ("#DEB542" . 60)
+     ("#F2804F" . 70)
+     ("#F771AC" . 85)
+     ("#eee8d5" . 100))) t)
+ '(hl-bg-colors
+   (quote
+    ("#DEB542" "#F2804F" "#FF6E64" "#F771AC" "#9EA0E5" "#69B7F0" "#69CABF" "#B4C342")))
+ '(hl-fg-colors
+   (quote
+    ("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3")))
+ '(hl-paren-colors (quote ("#2aa198" "#b58900" "#268bd2" "#6c71c4" "#859900")))
  '(indent-tabs-mode nil)
  '(js-indent-level 2)
+ '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
     (protobuf-mode solarized-theme zenburn-theme nova-theme pcache request ensime magit-gerrit gerrit-download magit-gitflow visual-ascii-mode visual-regexp-steroids lua-mode xcscope web-mode web-beautify sr-speedbar smartparens rust-mode regex-tool php-mode neotree markdown-mode js2-mode highlight-tail helm-smex helm-projectile helm-gtags graphviz-dot-mode google-c-style go-mode ggtags exec-path-from-shell evil company auto-save-buffers-enhanced auto-complete ag)))
+ '(pos-tip-background-color "#eee8d5")
+ '(pos-tip-foreground-color "#586e75")
  '(sh-basic-offset 2)
  '(sh-indentation 2)
  '(show-paren-mode t)
- '(tool-bar-mode nil))
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
+ '(term-default-bg-color "#fdf6e3")
+ '(term-default-fg-color "#657b83")
+ '(tool-bar-mode nil)
+ '(vc-annotate-background-mode nil)
+ '(weechat-color-list
+   (quote
+    (unspecified "#fdf6e3" "#eee8d5" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#657b83" "#839496")))
+ '(xterm-color-names
+   ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#073642"])
+ '(xterm-color-names-bright
+   ["#fdf6e3" "#cb4b16" "#93a1a1" "#839496" "#657b83" "#6c71c4" "#586e75" "#002b36"]))
