@@ -2,6 +2,8 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+OLDPATH=$PATH
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -78,7 +80,7 @@ if [ -d ~/bin ] ; then
 fi
 
 # for ruby gem
-command -v ruby >/dev/null 2>&1 && PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
+command -v ruby >/dev/null 2>&1 && PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
 
 # for java
 export MAVEN_OPTS="-Xmx2G"
@@ -168,4 +170,10 @@ elif [ "$OS_TYPE" == "Mac" ]; then
   alias ali="$SYNC --enable-drag-drop $ALI"
 fi
 
-export PATH
+# avoid PATH recursively expand
+if [ -z "$PATHSET" ]; then
+  export PATH
+  export PATHSET=done
+else
+  export PATH=$OLDPATH
+fi
