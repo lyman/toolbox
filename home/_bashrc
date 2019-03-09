@@ -76,7 +76,10 @@ export EDITOR="emacs"
 
 # set PATH so it includes user's private bin if it exists
 if [ -d ~/bin ] ; then
-  PATH=~/bin:~/.local/bin:"${PATH}"
+  PATH=~/bin:"${PATH}"
+fi
+if [ -d ~/.local/bin ] ; then
+  PATH=~/.local/bin:"${PATH}"
 fi
 
 # for ruby gem
@@ -156,7 +159,7 @@ if [ "$OS_TYPE" == "Linux" ]; then
   alias vnc="x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
   alias gitmeld="git difftool --dir-diff"
   alias dmesg="dmesg -H"
-  alias b85="synergyc -f -n cruiser --enable-drag-drop --debug INFO $B85"
+  alias b85="barrierc -f -n cruiser --enable-drag-drop --debug INFO $B85"
 
   # miniconda3
   PATH=$PATH:/home/lyman/opt/miniconda3/bin

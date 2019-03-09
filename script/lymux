@@ -2,7 +2,7 @@
 # lyman customized tmux startup script
 # modified from https://github.com/xuxiaodong/tmuxen/blob/master/tmuxen
 # license: GPL
-# Last modified: lyman 2019-02-15 18:21:22 cst
+# Last modified: lyman 2019-02-28 21:56:11 cst
 
 cmd=$(which tmux)   # tmux path
 session=lymux       # session name
@@ -16,8 +16,8 @@ $cmd has -t $session
 if [ $? != 0 ]; then
     $cmd new -d -s $session -n "fish" "/usr/bin/fish"
     $cmd neww -a -n "srv" "journalctl -f"
-    $cmd splitw -v -p 50 -t $session "$HOME/opt/cow/cow"
-    $cmd splitw -h -p 70 -t $session "x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
+#   $cmd splitw -v -p 25 -t $session "$HOME/opt/cow/cow"
+    $cmd splitw -v -p 20 -t $session "x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
     $cmd splitw -h -p 50 -t $session "barriers -f --debug INFO --name cruiser -c ~/workspace/ali/ali_barrier.conf --address :24800"
     $cmd neww -a -n "ali_dev" "$HOME/bin/aliport"
     $cmd selectw -t $session:0
