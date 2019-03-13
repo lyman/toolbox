@@ -159,7 +159,7 @@ if [ "$OS_TYPE" == "Linux" ]; then
   alias vnc="x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
   alias gitmeld="git difftool --dir-diff"
   alias dmesg="dmesg -H"
-  alias b85="barrierc -f -n cruiser --enable-drag-drop --debug INFO $B85"
+  alias b85="synergyc -f -n cruiser --enable-drag-drop --debug INFO $B85"
 
   # miniconda3
   PATH=$PATH:/home/lyman/opt/miniconda3/bin
@@ -168,7 +168,7 @@ if [ "$OS_TYPE" == "Linux" ]; then
   export STEAM_RUNTIME=0
 
 elif [ "$OS_TYPE" == "Mac" ]; then
-  SYNC="/Applications/Barrier.app/Contents/MacOS/barrierc -f -n escort --debug INFO"
+  SYNC="/Applications/Synergy.app/Contents/MacOS/synergyc -f -n escort --debug INFO"
   alias b85="$SYNC --enable-drag-drop $B85"
   alias ali="$SYNC --enable-drag-drop $ALI"
 fi
