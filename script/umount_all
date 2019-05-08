@@ -9,7 +9,7 @@ echo "clearing gvfs samba ..."
 /usr/bin/gio mount -s smb
 
 # alimount sshfs
-for p in `/usr/bin/mount -l | grep fuse | cut -f 3 -d ' '`; do
+for p in `/usr/bin/mount -l | grep fuse.sshfs | cut -f 3 -d ' '`; do
     echo "umount $p ..."
     /usr/bin/fusermount -u -z $p
     /usr/bin/rmdir $p
