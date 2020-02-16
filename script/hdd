@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my %action;
+for ( @ARGV ) {
+    $action{$_} = 1;
+}
+
+unless (%action) {
+    print STDERR "usage : $0 actions\n";
+    print STDERR "action: t|temp   - check tempreture\n";
+    print STDERR "        h|health - smart result\n";
+    exit 1;
+}
+
+for my $hdd (`ls -1 /dev/sd?`) {
+    chomp($hdd);
+    my $output;
+    if ($action{"t"} || $action{"temp"}) {
+        $output = `hddtemp -q $hdd`;
+        print $output if ($? == 0);
+    }
+    if ($action{"h"} || $action{"health"}) {
+        $output = `smartctl -H $hdd | grep result`;
+        print "$hdd: $output" if ($? == 0);
+    }
+}
