@@ -68,7 +68,8 @@ esac
 if [ "$TERM" != "dumb" ]; then
   if [ "$OS_TYPE" == "Linux" ]; then
     alias ls='ls --color'
-    alias ll='exa -l'
+    alias ll='ls -l'
+    # alias ll='exa -l'
   elif [ "$OS_TYPE" == "Mac" ]; then
     alias ls='ls -G'
     alias ll='ls -l -h'
@@ -109,8 +110,12 @@ if [ "$OS_TYPE" == "Linux" ]; then
   export JAVA_HOME=/usr/lib/jvm/default
   # for rJava
   export LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/amd64:$JAVA_HOME/jre/lib/amd64/server
+  # for gradle
+  export GRADLE_HOME=/usr/share/java/gradle
+  PATH=$GRADLE_HOME/bin:$PATH
+
 elif [ "$OS_TYPE" == "Mac" ]; then
-  export PATH="$HOME/.jenv/bin:$PATH"
+  PATH="$HOME/.jenv/bin:$PATH"
   eval "$(jenv init -)"
   # for rJava
   export LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/server
@@ -177,6 +182,7 @@ if [ "$OS_TYPE" == "Linux" ]; then
   alias gitmeld="git difftool --dir-diff"
   alias dmesg="dmesg -H"
   alias b85="synergyc -f -n cruiser --enable-drag-drop --debug INFO $B85"
+  alias syn="synergys -f --debug INFO --name cruiser -c ~/workspace/ali/ali_synergy.conf --address :2480 --serial-key $SYNERGY_KEY"
 
   # steam
   export STEAM_RUNTIME=0
