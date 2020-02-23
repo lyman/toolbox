@@ -178,9 +178,6 @@ if [ "$OS_TYPE" == "Linux" ]; then
   alias dmesg="dmesg -H"
   alias b85="synergyc -f -n cruiser --enable-drag-drop --debug INFO $B85"
 
-  # miniconda3
-  PATH=$PATH:/home/lyman/opt/miniconda3/bin
-
   # steam
   export STEAM_RUNTIME=0
 
@@ -189,6 +186,21 @@ elif [ "$OS_TYPE" == "Mac" ]; then
   alias b85="$SYNC --enable-drag-drop $B85"
   alias ali="$SYNC --enable-drag-drop $ALI"
 fi
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/lyman/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/lyman/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/lyman/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/lyman/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
 
 # avoid PATH recursively expand
 if [ -z "$PATHSET" ]; then
