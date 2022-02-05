@@ -90,7 +90,7 @@ done
 
 # personal preference
 export LANG="zh_CN.UTF-8"
-export EDITOR="emacs"
+export EDITOR="emacs -nw"
 
 # set PATH so it includes user's private bin if it exists
 if [ -d ~/bin ] ; then
@@ -150,6 +150,7 @@ export PERLDOC_PAGER=less
 # for go lang
 export GOPATH=~/.go
 PATH=$PATH:~/.go/bin
+export GOPROXY=https://goproxy.io
 
 # for nodejs
 export npm_config_prefix=$HOME/.node_modules
@@ -187,26 +188,29 @@ if [ "$OS_TYPE" == "Linux" ]; then
   # steam
   export STEAM_RUNTIME=0
 
+  # lutris
+  export LUTRIS_SKIP_INIT=1
+
 elif [ "$OS_TYPE" == "Mac" ]; then
   SYNC="/Applications/Synergy.app/Contents/MacOS/synergyc -f -n escort --debug INFO"
   alias b85="$SYNC --enable-drag-drop $B85"
   alias ali="$SYNC --enable-drag-drop $ALI"
 fi
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/lyman/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/lyman/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/lyman/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/lyman/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+# # >>> conda initialize >>>
+# # !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$('/home/lyman/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/home/lyman/miniconda3/etc/profile.d/conda.sh" ]; then
+#         . "/home/lyman/miniconda3/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/home/lyman/miniconda3/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
+# # <<< conda initialize <<<
 
 # avoid PATH recursively expand
 if [ -z "$PATHSET" ]; then
@@ -215,3 +219,10 @@ if [ -z "$PATHSET" ]; then
 else
   export PATH=$OLDPATH
 fi
+
+source /home/lyman/.config/broot/launcher/bash/br
+
+
+# BEGIN_KITTY_SHELL_INTEGRATION
+if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
+# END_KITTY_SHELL_INTEGRATION
