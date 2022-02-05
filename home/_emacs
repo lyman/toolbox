@@ -1,4 +1,4 @@
-;; Last modified: lyman 2019-10-11 15:40:05 cst
+;; Last modified: lyman 2021-06-11 00:54:18 cst
 
 ;; ==== 个人信息  ====
 
@@ -342,7 +342,7 @@ There are two things you can do about this warning:
 (add-hook 'write-file-hooks 'time-stamp)
 (setq time-stamp-active t)
 (setq time-stamp-start "Last modified:")
-(setq time-stamp-format " %:u %:y-%02m-%02d %02H:%02M:%02S %z")
+(setq time-stamp-format " %:u %:y-%02m-%02d %02H:%02M:%02S %#Z")
 (setq time-stamp-end "\n")
 ;; (setq time-stamp-warn-inactive t)
 
@@ -418,24 +418,24 @@ There are two things you can do about this warning:
 (exec-path-from-shell-initialize)
 
 ;; input method
-(setq load-path (cons (file-truename "~/.emacs.d/") load-path))
+;; (setq load-path (cons (file-truename "~/.emacs.d/") load-path))
 
-(require 'pyim)
-(require 'posframe)
-(require 'liberime)
+;; (require 'pyim)
+;; (require 'posframe)
+;; (require 'liberime)
 
-(setq default-input-method "pyim")
-(setq pyim-page-tooltip 'posframe)
-(setq pyim-page-length 9)
+;; (setq default-input-method "pyim")
+;; (setq pyim-page-tooltip 'posframe)
+;; (setq pyim-page-length 9)
 
-(liberime-start "/usr/share/rime-data/" (file-truename "~/.emacs.d/pyim/rime/"))
-(liberime-select-schema "luna_pinyin_simp")
-(setq pyim-default-scheme 'rime-quanpin)
+;; (liberime-start "/usr/share/rime-data/" (file-truename "~/.emacs.d/pyim/rime/"))
+;; (liberime-select-schema "luna_pinyin_simp")
+;; (setq pyim-default-scheme 'rime-quanpin)
 
-(setq posframe-arghandler #'my-posframe-arghandler)
-(defun my-posframe-arghandler (buffer-or-name arg-name value)
-  (let ((info '(:internal-border-width 10 :background-color "#333333" :font "Source Han Sans CN 14")))
-    (or (plist-get info arg-name) value)))
+;; (setq posframe-arghandler #'my-posframe-arghandler)
+;; (defun my-posframe-arghandler (buffer-or-name arg-name value)
+;;   (let ((info '(:internal-border-width 10 :background-color "#333333" :font "Source Han Sans CN 14")))
+;;     (or (plist-get info arg-name) value)))
 
 
 (custom-set-variables
