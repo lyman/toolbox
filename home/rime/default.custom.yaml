@@ -1,0 +1,12 @@
+patch:
+  "menu/page_size": 7
+
+  # 仅使用「雾凇拼音」的默认配置，配置此行即可
+  __include: rime_ice_suggestion:/
+  # 以下可根据自己所需进行自定义，仅做参考。
+  # 仅针对「雾凇输入法」的定制条目，请在 rime_ice.custom.yaml 中配置
+  __patch:
+    # 以词定字（上屏当前词组的第一个或最后一个字）
+    key_binder/+:
+      select_first_character: "bracketleft" # 即 [
+      select_last_character: "bracketright" # 即 ]
